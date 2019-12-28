@@ -17,7 +17,7 @@ namespace SharpLoad.Application
             foreach (string p in args)
                 allParamsFromCli += p + " ";
 
-            paramsRegex = new Regex(@"(--help|-h\b)|(--master)|(--slave)|(-H\s\S+|-host\s\S+)|(-f\s\S+)");
+            paramsRegex = new Regex(@"(--help|-h\b)|(--master)|(--slave)|(-p\s\S+)(-u\s\S+)|(-f\s\S+)|(-H\s\S+)|(-s\s\S+)");
             MatchCollection matches = paramsRegex.Matches(allParamsFromCli);
 
             foreach (var m in matches)
@@ -63,6 +63,6 @@ namespace SharpLoad.Application
         //                ParsedParams.TryAdd(nameValueSplit[0], nameValueSplit[0]);
         //        }
         //    }
-        }
+        //}
     }
 }
