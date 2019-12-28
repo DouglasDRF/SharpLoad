@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "SharpLoad.Application": {
+      "commandName": "Project",
+      "commandLineArgs": "-f C:\\filepatha.json -host https://www.algumacoisa.com.br --master --slave --help -h"
+    }
+  }
+}
