@@ -1,8 +1,11 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using SharpLoad.Application.Models;
+using System;
+using System.IO;
 
 namespace SharpLoad.Application
 {
-    public class Program
+    public static class Program
     {
         public static void Main(string[] args)
         {
@@ -13,13 +16,44 @@ namespace SharpLoad.Application
                                 + "-H [host] - Host of master node\n\n\n"
                                 + "--master - Runs the application in master mode for distributed Loading Tests \n"
                                 + "--slave - Runs the application in slave mode for distributed Load Tests \n";
-                                
+
             Console.WriteLine("\n\n=================================== SharpLoad - A .NET Core Load Testing CLI tool ===================================\n\n");
-            
-            CommandLineParser parsedOptions = new CommandLineParser(args);
-                        
-            if (parsedOptions.ParsedParams.ContainsKey("--help") || parsedOptions.ParsedParams.ContainsKey("-h") || parsedOptions.ParsedParams.Count == 0)
-                Console.WriteLine(helpText);
+
+            try
+            {
+                CommandLineParser parsedOptions = new CommandLineParser(args);
+
+                if (parsedOptions.ParsedParams.ContainsKey("--help") || parsedOptions.ParsedParams.ContainsKey("-h") || parsedOptions.ParsedParams.Count == 0)
+                {
+                    Console.WriteLine(helpText);
+                }
+                else if (parsedOptions.ParsedParams.ContainsKey("-f"))
+                {
+                   TestScript testScript = JsonConvert.DeserializeObject<TestScript>(LoadJson(parsedOptions.ParsedParams["-f"]));
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+
+        private static string LoadJson(string filePath)
+        {
+            string jsonStringContent = string.Empty;
+
+            if (File.Exists(filePath) && filePath.ToLower().EndsWith(".json"))
+            {
+                using (StreamReader s = new StreamReader(File.OpenRead(filePath)))
+                {
+                    jsonStringContent = s.ReadToEnd();
+                    return jsonStringContent;
+                }
+            }
+            else
+            {
+                throw new FileLoadException($"File not found at {jsonStringContent} or file is not *.json format");
+            }
         }
     }
 }

@@ -7,7 +7,9 @@ namespace SharpLoad.Application
     {
         public uint MaxUsers { get; private set; }
         public uint SpawnRate { get; private set; }
+        
         private LoadTestClient client;
+
         public TestRunner(LoadTestClient client, uint maxUsers, uint spawnRate)
         {
             this.client = client;
