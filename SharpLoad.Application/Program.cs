@@ -15,7 +15,9 @@ namespace SharpLoad.Application
                                 + "-s [spawnRate] - Spawn user rate per second \n"
                                 + "-H [host] - Host of master node\n\n\n"
                                 + "--master - Runs the application in master mode for distributed Loading Tests \n"
-                                + "--slave - Runs the application in slave mode for distributed Load Tests \n";
+                                + "--slave - Runs the application in slave mode for distributed Load Tests \n"
+                                + "--verbose - Shows detailed information on running program"
+                                + "-l [logLevel] - 0 = Default, 1 = Errors and Warnings, 2 = Full";
 
             Console.WriteLine("\n\n=================================== SharpLoad - A .NET Core Load Testing CLI tool ===================================\n\n");
 
@@ -31,7 +33,9 @@ namespace SharpLoad.Application
                 {
                     TestScript testScript = JsonConvert.DeserializeObject<TestScript>(LoadJson(parsedOptions.ParsedParams["-f"]));
                     TestRunner runner = new TestRunner(testScript);
-                    runner.RunTests();
+                    bool verbose = parsedOptions.ParsedParams.ContainsKey("--verbose") ? true : false;
+                    uint logLevel = parsedOptions.ParsedParams.ContainsKey("-l") ? uint.Parse(parsedOptions.ParsedParams["-l"]) : 0;
+                    runner.RunTests(verbose);
                 }
             }
             catch (Exception e)

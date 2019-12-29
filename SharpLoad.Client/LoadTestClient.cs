@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
 using System.Runtime.CompilerServices;
@@ -13,6 +14,7 @@ namespace SharpLoad.Client
         public uint RequestNumber { get; set; }
         public HttpStatusCode StatusCode { get; set; }
         public HttpResponseMessage Response { get; set; }
+        public long ResponseTimeInMiliseconds { get; set; }
     }
 
     public class LoadTestClient
@@ -24,13 +26,14 @@ namespace SharpLoad.Client
         public object Key { get; private set; } = new object();
         public event EventHandler<RequestResponseEventArgs> RequestFailed;
         public event EventHandler<RequestResponseEventArgs> RequestSucessful;
+        public event EventHandler RequestDispatch;
 
         private LoadTestClient(Uri host = null)
         {
             httpClient = new HttpClient();
-         
+
             httpClient.BaseAddress = host;
-            httpClient.DefaultRequestVersion = HttpVersion.Version20;
+            //httpClient.DefaultRequestVersion = HttpVersion.Version20;
             httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Accept", "text/html,application/xhtml+xml,application/xml,application/json");
             httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Accept-Encoding", "gzip,deflate");
             httpClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36");
@@ -55,7 +58,7 @@ namespace SharpLoad.Client
         {
             HttpRequestMessage message = new HttpRequestMessage(new HttpMethod(method), path);
             message.Content = content;
-            
+
             return message;
         }
 
@@ -64,27 +67,40 @@ namespace SharpLoad.Client
             return new Task<HttpRequestMessage>(() => CreateRequestMessage(method, path, content));
         }
 
-        public async Task<HttpResponseMessage> SendRequestAsync(HttpRequestMessage message)
+        public async Task<HttpResponseMessage> SendRequestAsync(HttpRequestMessage message, bool verbose = false)
         {
-            Task<HttpResponseMessage> task = httpClient.SendAsync(message);
-            
             lock (Key)
             {
                 requestsDispatched++;
             }
 
             uint currentRequest = requestsDispatched;
-            Console.WriteLine($"Dispatching Request nº {currentRequest}: " + message.Method.ToString() + " " + message.RequestUri);
-            
-            HttpResponseMessage response = await task;
 
-            if (response.IsSuccessStatusCode)
-                OnRequestSucessful(new RequestResponseEventArgs() { RequestNumber = currentRequest, StatusCode = response.StatusCode, Response = response });
-            else
-                OnRequestFailed(new RequestResponseEventArgs() { RequestNumber = requestsDispatched, StatusCode = response.StatusCode, Response = response }); ;
+            if (verbose)
+                Console.WriteLine($"Dispatching Request nº {currentRequest}: " + message.Method.ToString() + " " + message.RequestUri);
+
+            HttpResponseMessage response = null;
+            Stopwatch sw = null;
+            try
+            {
+                OnRequestDispatch(EventArgs.Empty);
+                sw = Stopwatch.StartNew();
+                response = await httpClient.SendAsync(message);
+                sw.Stop();
 
 
-            return response;
+                if (response.IsSuccessStatusCode)
+                    OnRequestSucessful(new RequestResponseEventArgs() { RequestNumber = currentRequest, StatusCode = response.StatusCode, Response = response, ResponseTimeInMiliseconds = sw.ElapsedMilliseconds });
+                else
+                    OnRequestFailed(new RequestResponseEventArgs() { RequestNumber = requestsDispatched, StatusCode = response.StatusCode, Response = response, ResponseTimeInMiliseconds = sw.ElapsedMilliseconds });
+
+                return response;
+            }
+            catch (HttpRequestException)
+            {
+                OnRequestFailed(new RequestResponseEventArgs() { RequestNumber = requestsDispatched, StatusCode = response.StatusCode, Response = response, ResponseTimeInMiliseconds = sw.ElapsedMilliseconds });
+                return response;
+            }
         }
 
         protected void OnRequestFailed(RequestResponseEventArgs e)
@@ -96,5 +112,11 @@ namespace SharpLoad.Client
         {
             RequestSucessful?.Invoke(this, e);
         }
+
+        protected void OnRequestDispatch(EventArgs e)
+        {
+            RequestDispatch?.Invoke(this, e);
+        }
+
     }
 }

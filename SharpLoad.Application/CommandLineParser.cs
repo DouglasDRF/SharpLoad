@@ -17,7 +17,7 @@ namespace SharpLoad.Application
             foreach (string p in args)
                 allParamsFromCli += p + " ";
 
-            paramsRegex = new Regex(@"(--help|-h\b)|(--master)|(--slave)|(-p\s\S+)(-u\s\S+)|(-H\s\S+)|(-s\s\S+)|(-f\s\'.*?\')|(-f\s\S+)", RegexOptions.ECMAScript);
+            paramsRegex = new Regex(@"(--help|-h\b)|(--master)|(--slave)|(--slave)|(--verbose)|(-l\s\S+)|(-p\s\S+)|(-u\s\S+)|(-H\s\S+)|(-s\s\S+)|(-f\s\'.*?\')|(-f\s\S+)", RegexOptions.ECMAScript);
             MatchCollection matches = paramsRegex.Matches(allParamsFromCli);
 
             foreach (var m in matches)
