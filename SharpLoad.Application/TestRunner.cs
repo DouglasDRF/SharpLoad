@@ -3,6 +3,8 @@ using SharpLoad.Client;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SharpLoad.Application
@@ -10,7 +12,7 @@ namespace SharpLoad.Application
     public class TestRunner
     {
         private readonly TestScript testScript;
-        private uint requestNumber;
+        private readonly object key = new object();
 
         public TestRunner(TestScript testScript)
         {
@@ -22,14 +24,19 @@ namespace SharpLoad.Application
             Stopwatch sw = Stopwatch.StartNew();
             Queue<Task> usersThreads = new Queue<Task>((int)testScript.MaxUsers);
             long currentSecondReference = 0;
-            LoadTestClient client = new LoadTestClient(testScript.TargetHost);
+            LoadTestClient client = LoadTestClient.GetInstance(testScript.TargetHost);
+            Statistics stats = new Statistics(client);
+            client.RequestFailed += RequestError;
+            client.RequestSucessful += RequestSuccessful;
+
+            Console.WriteLine($"Load Test Script loaded for {testScript.TargetHost}");
 
             for (uint i = 0; i < testScript.MaxUsers; i++)
             {
-                usersThreads.Enqueue(new Task(() => ExecuteUserRequestScript(client) ));
+                usersThreads.Enqueue(new Task(async () => await ExecuteUserRequestScriptAsync(client)));
             }
 
-            while (sw.ElapsedMilliseconds <= testScript.TestDuration * 1000)
+            do
             {
                 if (sw.ElapsedMilliseconds - 1000 >= currentSecondReference)
                 {
@@ -39,31 +46,36 @@ namespace SharpLoad.Application
                     {
                         Task t = usersThreads.Dequeue();
                         t.Start();
-                        usersThreads.Enqueue(new Task(() => ExecuteUserRequestScript(client)));
+
+                        usersThreads.Enqueue(new Task(async () => await ExecuteUserRequestScriptAsync(client)));
                     }
                 }
             }
+            while (sw.ElapsedMilliseconds <= testScript.TestDuration * 1000);
+
+            sw.Stop();
+            Console.WriteLine($"Finished Requests Dispatching... Waiting Remaining {usersThreads.Count} Responses...");
+
+            Console.WriteLine($"{stats.RequestsSucessful}");
             return;
         }
 
-        private void ExecuteUserRequestScript(LoadTestClient client)
+        private async Task ExecuteUserRequestScriptAsync(LoadTestClient client)
         {
-            foreach (UserRequestSequence reqSeq in testScript.UserRequestSequences)
+            foreach (UserRequestSequence request in testScript.UserRequests)
             {
-                client.RequestFailed += RequestError;
-                client.RequestFailed += RequestSuccessful;
-                _ = client.SendRequestAsync(client.CreateRequestMessage(reqSeq.HttpMethod.ToString(), reqSeq.Path, client.CreateContent(reqSeq.Body, reqSeq.ApplicationType)));
+                await client.SendRequestAsync(client.CreateRequestMessage(request.HttpMethod.ToString(), request.Path, client.CreateContent(request.Body, request.ApplicationType)));
             }
         }
 
-        private void RequestError(object sender, EventArgs e)
+        private void RequestError(object sender, RequestResponseEventArgs e)
         {
-            Console.WriteLine("Request has been failed");
+            Console.WriteLine($"Request {e.RequestNumber} has been failed");
         }
 
-        private void RequestSuccessful(object sender, EventArgs e)
+        private void RequestSuccessful(object sender, RequestResponseEventArgs e)
         {
-            Console.WriteLine("Request has been completed successfully");
+            Console.WriteLine($"Request {e.RequestNumber} has been completed successfully");
         }
     }
 }

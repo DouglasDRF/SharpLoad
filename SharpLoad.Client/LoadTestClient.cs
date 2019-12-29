@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Net;
 using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -7,25 +8,40 @@ using System.Threading.Tasks;
 
 namespace SharpLoad.Client
 {
+    public class RequestResponseEventArgs : EventArgs
+    {
+        public uint RequestNumber { get; set; }
+        public HttpStatusCode StatusCode { get; set; }
+        public string ResponseBody { get; set; }
+    }
+
     public class LoadTestClient
     {
         private static HttpClient httpClient;
+        private static LoadTestClient loadTestClient;
         private static uint requestsDispatched;
-        public static object Key { get; set; }
-        public static uint Errors { get; set; }
-        public static uint Success { get; set; }
+        public object Key { get; set; }
+        public event EventHandler<RequestResponseEventArgs> RequestFailed;
+        public event EventHandler<RequestResponseEventArgs> RequestSucessful;
 
-        public event EventHandler RequestFailed;
-        public event EventHandler RequestSucessful;
-
-        public LoadTestClient(Uri host)
+        private LoadTestClient(Uri host = null)
         {
             httpClient = new HttpClient();
             httpClient.BaseAddress = host;
-            
+            httpClient.DefaultRequestVersion = HttpVersion.Version20;
+            httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Accept", "text/html,application/xhtml+xml,application/xml,application/json");
+            httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Accept-Encoding", "gzip,deflate");
+            httpClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36");
+
             Key = new object();
-            Errors = 0;
-            Success = 0;
+        }
+
+        public static LoadTestClient GetInstance(Uri host)
+        {
+            if (loadTestClient == null)
+                loadTestClient = new LoadTestClient(host);
+
+            return loadTestClient;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -39,17 +55,8 @@ namespace SharpLoad.Client
         {
             HttpRequestMessage message = new HttpRequestMessage(new HttpMethod(method), path);
             message.Content = content;
-            message.Headers.TryAddWithoutValidation("Accept", "text/html,application/xhtml+xml,application/xml,application/json");
-            message.Headers.TryAddWithoutValidation("Accept-Encoding", "gzip, deflate");
-            message.Headers.TryAddWithoutValidation("User-Agent", "SharpLoad/0.1");
             
             return message;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public HttpResponseMessage SendRequest(HttpRequestMessage message)
-        {
-            return httpClient.SendAsync(message).Result;
         }
 
         public Task<HttpRequestMessage> CreateRequestMessageAsync(string method, string path, HttpContent content = null)
@@ -57,45 +64,38 @@ namespace SharpLoad.Client
             return new Task<HttpRequestMessage>(() => CreateRequestMessage(method, path, content));
         }
 
-        public Task<HttpResponseMessage> SendRequestAsync(HttpRequestMessage message)
+        public async Task<HttpResponseMessage> SendRequestAsync(HttpRequestMessage message)
         {
+
+            HttpResponseMessage response = await httpClient.SendAsync(message);
+
             lock (Key)
             {
                 requestsDispatched++;
-                Console.WriteLine($"Dispatching Request nº {requestsDispatched}: " + message.Method.ToString() + message.RequestUri.ToString());
             }
             
-            return httpClient.SendAsync(message).ContinueWith((task) => ValidateRequest(task.Result) );
-        }
+            uint currentRequest = requestsDispatched;
+            Console.WriteLine($"Dispatching Request nº {currentRequest}: " + message.Method.ToString() + " " + message.RequestUri);
 
-        private HttpResponseMessage ValidateRequest(HttpResponseMessage response)
-        {
             if (response.IsSuccessStatusCode)
-            {
-                lock (Key)
-                {
-                    Success++;
-                    OnRequestSucessful(EventArgs.Empty);
-                }
-                
-                return response;
-            }
+                OnRequestSucessful(new RequestResponseEventArgs() { RequestNumber = currentRequest, StatusCode = response.StatusCode, ResponseBody = await response.Content.ReadAsStringAsync().ConfigureAwait(false) });
             else
-            {
-                Errors++;
-                OnRequestFailed(EventArgs.Empty);
-                return response;
-            }
+                OnRequestFailed(new RequestResponseEventArgs() { RequestNumber = requestsDispatched, StatusCode = response.StatusCode, ResponseBody = await response.Content.ReadAsStringAsync().ConfigureAwait(false) }); ;
+
+
+            return response;
         }
 
-        public void OnRequestFailed(EventArgs e)
+        protected void OnRequestFailed(RequestResponseEventArgs e)
         {
             RequestFailed?.Invoke(this, e);
+            var list = RequestFailed.GetInvocationList();
         }
 
-        public void OnRequestSucessful(EventArgs e)
+        protected void OnRequestSucessful(RequestResponseEventArgs e)
         {
             RequestSucessful?.Invoke(this, e);
+            var list = RequestSucessful.GetInvocationList();
         }
     }
 }
