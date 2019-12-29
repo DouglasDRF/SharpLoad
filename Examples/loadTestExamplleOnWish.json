@@ -1,7 +1,7 @@
 {
     "targetHost":"https://www.wish.com",
-    "maxUsers": 10000,
-    "spawnRate": 167,
+    "maxUsers": 5000,
+    "spawnRate": 84,
     "testDuration": 60,
     "userRequests": [
         {
