@@ -1,0 +1,14 @@
+{
+    "targetHost":"https://www.wish.com",
+    "maxUsers": 10000,
+    "spawnRate": 167,
+    "testDuration": 60,
+    "userRequests": [
+        {
+            "method": "GET",
+            "path": "/",
+            "body": null, 
+            "applicationType": null
+        }
+    ]
+}
