@@ -1,6 +1,4 @@
-
 [![Build Status](https://travis-ci.org/DouglasDRF/SharpLoad.svg?branch=master)](https://travis-ci.org/DouglasDRF/SharpLoad)
- 
 
 # SharpLoad
 
@@ -29,3 +27,4 @@ or
 ## Getting Started
 To first run some load test you can write a json file with the params of the test. There's a sample in Example folder that you can run it calling:
 	`sharloader -f ../<pathToFolder>/loadTestExamplleOnWish.json `
+
