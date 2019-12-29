@@ -29,7 +29,9 @@ namespace SharpLoad.Application
                 }
                 else if (parsedOptions.ParsedParams.ContainsKey("-f"))
                 {
-                   TestScript testScript = JsonConvert.DeserializeObject<TestScript>(LoadJson(parsedOptions.ParsedParams["-f"]));
+                    TestScript testScript = JsonConvert.DeserializeObject<TestScript>(LoadJson(parsedOptions.ParsedParams["-f"]));
+                    TestRunner runner = new TestRunner(testScript);
+                    runner.RunTests();
                 }
             }
             catch (Exception e)

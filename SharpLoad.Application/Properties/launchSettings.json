@@ -2,7 +2,7 @@
   "profiles": {
     "SharpLoad.Application": {
       "commandName": "Project",
-      "commandLineArgs": "-f C:\\filepatha.json -host https://www.algumacoisa.com.br --master --slave --help -h"
+      "commandLineArgs": "-f 'C:\\Users\\Douglas Ferreira\\Desktop\\testflight.json' --master"
     }
   }
 }
