@@ -1,3 +1,15 @@
 ﻿src/.vs
 src/*/bin
 src/*/obj
+/Release/win-x64-nodependencies
+/Release/win-x64-netcore31runtime
+/Release/osx-x64-nodependencies
+/Release/osx-x64-netcore31runtime
+/Release/linux-x64-nodependencies
+/Release/linux-x64-netcore31runtime
+/Release/linux-arm-nodependencies
+/Release/linux-arm-netcore31runtime
+/Release/win-x64-nodependencies.7z
+/Release/osx-x64-nodependencies.7z
+/Release/linux-x64-nodependencies.7z
+/Release/linux-arm-nodependencies.7z
