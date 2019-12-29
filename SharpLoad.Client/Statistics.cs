@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace SharpLoad.Client
 {
@@ -30,6 +29,5 @@ namespace SharpLoad.Client
         {
             RequestsSucessful++;
         }
-               
     }
 }

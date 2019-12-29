@@ -10,6 +10,5 @@
         HEAD,
         OPTIONS,
         LINK,
-        PURGE
     }
 }

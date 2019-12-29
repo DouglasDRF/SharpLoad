@@ -3,7 +3,6 @@ using SharpLoad.Client;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -19,53 +18,61 @@ namespace SharpLoad.Application
             this.testScript = testScript;
         }
 
-        public void RunTests()
+        public void RunTests(bool verbose = true, uint updateTime = 3)
         {
             Stopwatch sw = Stopwatch.StartNew();
             Queue<Task> usersThreads = new Queue<Task>((int)testScript.MaxUsers);
-            long currentSecondReference = 0;
+            double currentSecondReference = 0;
             LoadTestClient client = LoadTestClient.GetInstance(testScript.TargetHost);
             Statistics stats = new Statistics(client);
-            client.RequestFailed += RequestError;
-            client.RequestSucessful += RequestSuccessful;
+
+            if (verbose)
+            {
+                client.RequestFailed += RequestError;
+                client.RequestSucessful += RequestSuccessful;
+            }
 
             Console.WriteLine($"Load Test Script loaded for {testScript.TargetHost}");
 
-            for (uint i = 0; i < testScript.MaxUsers; i++)
-            {
-                usersThreads.Enqueue(new Task(async () => await ExecuteUserRequestScriptAsync(client)));
-            }
+            for (int i = 0; i < testScript.MaxUsers; i++)
+                usersThreads.Enqueue(new Task(() => ExecuteUserRequestScript(client)));
 
             do
             {
-                if (sw.ElapsedMilliseconds - 1000 >= currentSecondReference)
+                if (sw.Elapsed.TotalSeconds - 1 >= currentSecondReference)
                 {
-                    currentSecondReference = sw.ElapsedMilliseconds;
+                    currentSecondReference = sw.Elapsed.TotalSeconds;
 
-                    for (uint i = 0; i < testScript.SpawnRate; i++)
+                    for (int i = 0; i < testScript.SpawnRate; i++)
                     {
                         Task t = usersThreads.Dequeue();
                         t.Start();
-
-                        usersThreads.Enqueue(new Task(async () => await ExecuteUserRequestScriptAsync(client)));
+                        usersThreads.Enqueue(new Task(() => ExecuteUserRequestScript(client)));
                     }
                 }
+
             }
-            while (sw.ElapsedMilliseconds <= testScript.TestDuration * 1000);
+            while (sw.Elapsed.TotalSeconds <= testScript.TestDuration);
 
             sw.Stop();
-            Console.WriteLine($"Finished Requests Dispatching... Waiting Remaining {usersThreads.Count} Responses...");
+            Console.WriteLine($"Finished Requests Dispatching... Waiting Remaining Responses...");
+            _ = Task.WhenAny(usersThreads.ToArray());
+            usersThreads.Clear();
 
-            Console.WriteLine($"{stats.RequestsSucessful}");
+            Console.WriteLine("\n\n ================================== RESULTS =================================");
+            Console.WriteLine($"All Requests Sent: {stats.RequestsSucessful + stats.RequestsFailed}");
+            Console.WriteLine($"All Requests Sucessful: {stats.RequestsSucessful}");
+            Console.WriteLine($"All Requests Failed: {stats.RequestsFailed}");
+            Console.WriteLine($"Fail Rate: {stats.RequestsFailed / (stats.RequestsSucessful + stats.RequestsFailed)}");
+            Console.WriteLine($"Response Time Mean: {stats.ResponseTimeMean}");
+
             return;
         }
 
-        private async Task ExecuteUserRequestScriptAsync(LoadTestClient client)
+        private void ExecuteUserRequestScript(LoadTestClient client)
         {
             foreach (UserRequestSequence request in testScript.UserRequests)
-            {
-                await client.SendRequestAsync(client.CreateRequestMessage(request.HttpMethod.ToString(), request.Path, client.CreateContent(request.Body, request.ApplicationType)));
-            }
+                _ = client.SendRequestAsync(client.CreateRequestMessage(request.HttpMethod.ToString(), request.Path, client.CreateContent(request.Body, request.ApplicationType))).ConfigureAwait(false);
         }
 
         private void RequestError(object sender, RequestResponseEventArgs e)
