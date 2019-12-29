@@ -19,7 +19,7 @@ namespace SharpLoad.Application
                                 + "--verbose - Shows detailed information on running program"
                                 + "-l [logLevel] - 0 = Default, 1 = Errors and Warnings, 2 = Full";
 
-            Console.WriteLine("\n\n=================================== SharpLoad - A .NET Core Load Testing CLI tool ===================================\n\n");
+            Console.WriteLine("\n\n =================================== SharpLoad - A .NET Core Load Testing CLI tool ===================================\n\n");
 
             try
             {

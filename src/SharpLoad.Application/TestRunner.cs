@@ -58,7 +58,7 @@ namespace SharpLoad.Application
                     currentSecondUpdate += 5;
                     stats.UpdateStatistics();
 
-                    Console.WriteLine("\n\n ================================== PARTIAL RESULTS =================================");
+                    Console.WriteLine("\n\n ================================== PARTIAL RESULTS =================================\n");
                     ShowResults(stats, sw.Elapsed.TotalSeconds);
                 }
 
@@ -77,7 +77,7 @@ namespace SharpLoad.Application
             sw.Stop();
             Thread.Yield();
             stats.UpdateStatistics();
-            Console.WriteLine("\n\n ================================== RESULTS =================================");
+            Console.WriteLine("\n\n ================================== RESULTS =================================\n");
             ShowResults(stats, sw.Elapsed.TotalSeconds);
 
             return;
@@ -102,17 +102,20 @@ namespace SharpLoad.Application
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void ShowResults(Statistics stats, double elapsedSeconds)
         {
-            Console.WriteLine($"Test Elapsed Time: {Math.Round(elapsedSeconds, 2)} s");
-            Console.WriteLine($"Requests per second: {Math.Round(stats.RequestsDispatched / elapsedSeconds, 0)}");
-            Console.WriteLine($"All Requests Sent: {stats.RequestsDispatched}");
-            Console.WriteLine($"All Requests Responded: {stats.TotalRequestsResponse}");
-            Console.WriteLine($"All Requests Sucessful: {stats.RequestsSucessful}");
-            Console.WriteLine($"All Requests Failed: {stats.RequestsFailed}");
-            Console.WriteLine($"Fail Rate: {stats.FailRate}%");
-            Console.WriteLine($"Response Rate: {stats.ResponseRate}%");
-            Console.WriteLine($"Response Time Mean: {stats.ResponseTimeMean} ms");
-            Console.WriteLine($"Minimum Response Time: {stats.MinResponseTime} ms");
-            Console.WriteLine($"Maximum Time Mean: {stats.MaxResponseTime} ms");
+            Console.WriteLine($"\tTest Elapsed Time: {Math.Round(elapsedSeconds, 2)} s");
+            Console.WriteLine($"\tRequests per second: {Math.Round(stats.RequestsDispatched / elapsedSeconds, 0)} \n");
+
+            Console.WriteLine($"\tAll Requests Sent: {stats.RequestsDispatched}");
+            Console.WriteLine($"\tAll Requests Responded: {stats.TotalRequestsResponse}");
+            Console.WriteLine($"\tAll Requests Sucessful: {stats.RequestsSucessful}");
+            Console.WriteLine($"\tAll Requests Failed: {stats.RequestsFailed}\n");
+            
+            Console.WriteLine($"\tFail Rate: {stats.FailRate}%");
+            Console.WriteLine($"\tResponse Rate: {stats.ResponseRate}%\n");
+            
+            Console.WriteLine($"\tResponse Time Mean: {stats.ResponseTimeMean} ms");
+            Console.WriteLine($"\tMinimum Response Time: {stats.MinResponseTime} ms");
+            Console.WriteLine($"\tMaximum Time Mean: {stats.MaxResponseTime} ms");
         }
     }
 }
