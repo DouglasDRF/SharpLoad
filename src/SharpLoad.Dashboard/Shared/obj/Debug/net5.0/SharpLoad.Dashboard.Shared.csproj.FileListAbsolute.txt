@@ -1,9 +1,0 @@
-C:\Repositories\SharpLoad\src\SharpLoad.Dashboard\Shared\bin\Debug\net5.0\SharpLoad.Dashboard.Shared.deps.json
-C:\Repositories\SharpLoad\src\SharpLoad.Dashboard\Shared\bin\Debug\net5.0\SharpLoad.Dashboard.Shared.dll
-C:\Repositories\SharpLoad\src\SharpLoad.Dashboard\Shared\bin\Debug\net5.0\SharpLoad.Dashboard.Shared.pdb
-C:\Repositories\SharpLoad\src\SharpLoad.Dashboard\Shared\obj\Debug\net5.0\SharpLoad.Dashboard.Shared.csprojAssemblyReference.cache
-C:\Repositories\SharpLoad\src\SharpLoad.Dashboard\Shared\obj\Debug\net5.0\SharpLoad.Dashboard.Shared.AssemblyInfoInputs.cache
-C:\Repositories\SharpLoad\src\SharpLoad.Dashboard\Shared\obj\Debug\net5.0\SharpLoad.Dashboard.Shared.AssemblyInfo.cs
-C:\Repositories\SharpLoad\src\SharpLoad.Dashboard\Shared\obj\Debug\net5.0\SharpLoad.Dashboard.Shared.csproj.CoreCompileInputs.cache
-C:\Repositories\SharpLoad\src\SharpLoad.Dashboard\Shared\obj\Debug\net5.0\SharpLoad.Dashboard.Shared.dll
-C:\Repositories\SharpLoad\src\SharpLoad.Dashboard\Shared\obj\Debug\net5.0\SharpLoad.Dashboard.Shared.pdb
