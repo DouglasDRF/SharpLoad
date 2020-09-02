@@ -1,0 +1,56 @@
+﻿@page "/loadtestscripts"
+@using SharpLoad.AppService.ViewModels
+@inject HttpClient Http
+@inject NavigationManager Navigator
+
+<h1>Load Test Scripts</h1>
+
+<div class="d-flex flex-row-reverse">
+    <button class="p-1 btn btn-primary" @onclick="GoToInsertPage"> Add Test Script </button>
+</div>
+
+@if (scripts == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <br />
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Base Server Address</th>
+                <th>Interval BetweenRequests</th>
+                <th>Simultaneous Clients</th>
+                <th>Status/Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var script in scripts)
+            {
+                <tr>
+                    <td>@script.Name</td>
+                    <td>@script.BaseServerAddress</td>
+                    <td>@script.SpawnRate</td>
+                    <td>@script.MaxSimultaneousClients</td>
+                    <td> <button>Run</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private LoadTestScriptViewModel[] scripts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        scripts = await Http.GetFromJsonAsync<LoadTestScriptViewModel[]>("api/loadtestscript");
+    }
+
+    private void GoToInsertPage()
+    {
+        Navigator.NavigateTo("addloadtestscript");
+    }
+}

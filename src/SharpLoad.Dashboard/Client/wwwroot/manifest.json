@@ -1,0 +1,15 @@
+{
+  "name": "SharpLoad.Dashboard",
+  "short_name": "SharpLoad.Dashboard",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#3b3b3b",
+  "theme_color": "#005700",
+  "icons": [
+    {
+      "src": "icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}

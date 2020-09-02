@@ -1,0 +1,95 @@
+﻿@page "/addloadtestscript"
+
+@using System.Text.Json
+@using SharpLoad.AppService.ViewModels
+@using System.Net.Http
+@using System.Text
+
+@inject HttpClient client
+
+<h3>Add a New Load Test Script</h3>
+
+<div class="d-flex flex-row bd-highlight">
+    <form>
+        <div class="form-group">
+            <label>Nome:</label>
+            <input class="form-control" type="text" @bind="model.Name">
+        </div>
+        <div class="form-group">
+            <label>Server Uri Base:</label>
+            <input class="form-control" type="text" placeholder="http://localhost;https://localhost:5000" @bind="model.BaseServerAddress">
+        </div>
+        <div class="form-group">
+            <label>Max Simultaneous User Clients:</label>
+            <input class="form-control" type="number" @bind="model.MaxSimultaneousClients">
+        </div>
+        <div class="form-group">
+            <label>Spawn Rate:</label>
+            <input class="form-control" type="number" @bind="model.SpawnRate">
+        </div>
+
+        <div class="form-group">
+            <label>Requests:</label>
+            <br />
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Endpoint Path</th>
+                        <th>Method</th>
+                        <th>Body Content</th>
+                        <th>Headers</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var r in model.Requests)
+                    {
+                        <tr>
+                            <td>
+                                <input class="form-control" type="text" @bind="r.Path">
+                            </td>
+                            <td>
+                                <select @bind="r.Method"></select>
+                            </td>
+                            <td>
+                                <input class="form-control" type="text" @bind="r.Body">
+                            </td>
+                            <td>
+                                <input class="form-control" type="text" @bind="r.Headers">
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div class="d-flex flex-column-reverse bd-highlight">
+                <button class="btn btn-success" @onclick="AddRequest">Add Request</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<button type="button" class="btn btn-primary" @onclick="SaveNewTestPlanAsync">Save </button>
+
+@code{
+
+    private LoadTestScriptViewModel model = new LoadTestScriptViewModel();
+    private RequestViewModel requestModel = new RequestViewModel();
+
+    private void AddRequest()
+    {
+        if (model.Requests == null)
+            model.Requests = new List<RequestViewModel>();
+
+        model.Requests.Add(requestModel);
+    }
+
+    private void RefreshRequestList()
+    {
+        
+    }
+
+    private async void SaveNewTestPlanAsync()
+    {
+        HttpContent content = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
+        await client.PostAsync("http://localhost:5000/api/loadtestscript", content);
+    }
+}
