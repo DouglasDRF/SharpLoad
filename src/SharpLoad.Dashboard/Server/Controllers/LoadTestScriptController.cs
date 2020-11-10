@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SharpLoad.AppService.Abstractions;
-using SharpLoad.AppService.ViewModels;
+using SharpLoad.AppService.DTOs;
 
 namespace SharpLoad.Dashboard.Server.Controllers
 {
@@ -22,7 +22,7 @@ namespace SharpLoad.Dashboard.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAsync(LoadTestScriptViewModel testScript)
+        public async Task<IActionResult> CreateAsync(LoadTestScriptDto testScript)
         {
             await _appService.CreateAsync(testScript);
             return Created(HttpContext.Request.Path, testScript);

@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace SharpLoad.AppService.ViewModels
+namespace SharpLoad.AppService.DTOs
 {
-    public class RequestViewModel : BaseViewModel
+    public class RequestDto : BaseDto
     {
         [Required]
         public Uri Path { get; set; }
@@ -13,6 +13,6 @@ namespace SharpLoad.AppService.ViewModels
         public HttpMethods Method {get; set;}
         [Required]
         public byte[] Body { get; set; }
-        public IEnumerable<RequestHeaderViewModel> Headers { get; set; }
+        public IEnumerable<RequestHeaderDto> Headers { get; set; }
     }
 }

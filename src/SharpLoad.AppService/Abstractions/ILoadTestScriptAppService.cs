@@ -1,12 +1,12 @@
-﻿using SharpLoad.AppService.ViewModels;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using SharpLoad.AppService.DTOs;
 
 namespace SharpLoad.AppService.Abstractions
 {
     public interface ILoadTestScriptAppService
     {
-        Task<IEnumerable<LoadTestScriptViewModel>> GetAllAsync();
-        Task CreateAsync(LoadTestScriptViewModel viewModel);
+        Task<IEnumerable<LoadTestScriptDto>> GetAllAsync();
+        Task CreateAsync(LoadTestScriptDto dto);
     }
 }

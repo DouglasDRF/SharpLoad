@@ -1,6 +1,6 @@
-﻿namespace SharpLoad.AppService.ViewModels
+﻿namespace SharpLoad.AppService.DTOs
 {
-    public class RequestHeaderViewModel
+    public class RequestHeaderDto
     {
         public string Key { get; set; }
         public string Value { get; set; }

@@ -1,16 +1,16 @@
-﻿using SharpLoad.Core.Enums;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using SharpLoad.Dashboard.Client.ViewModels.Enums;
 
-namespace SharpLoad.AppService.ViewModels
+namespace SharpLoad.Dashboard.Client.ViewModels
 {
-    public class LoadTestScriptViewModel : BaseViewModel
+    public class LoadTestScriptViewModel
     {
         public LoadTestScriptViewModel()
         {
             Requests = new List<RequestViewModel>();
         }
-        
+
         [Required]
         [MaxLength(64)]
         public string Name { get; set; }
