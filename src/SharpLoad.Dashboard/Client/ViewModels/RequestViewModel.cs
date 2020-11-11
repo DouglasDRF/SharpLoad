@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Text.Json.Serialization;
 using SharpLoad.Dashboard.Client.ViewModels.Enums;
 
@@ -11,10 +11,9 @@ namespace SharpLoad.Dashboard.Client.ViewModels
     public class RequestViewModel
     {
         [Required]
-        public Uri Path { get; set; }
+        public string Path { get; set; }
         [Required]
-        public HttpMethod Method { get; set; }
-        [Required]
+        public HttpMethods Method { get; set; }
         public string Body { get; set; }
 
         public IEnumerable<RequestHeaderViewModel> RequestHeaders => ParseBulkHeadersToHeadersObject();
@@ -24,16 +23,8 @@ namespace SharpLoad.Dashboard.Client.ViewModels
 
         private IEnumerable<RequestHeaderViewModel> ParseBulkHeadersToHeadersObject()
         {
-            IList<RequestHeaderViewModel> requestHeaders = new List<RequestHeaderViewModel>();
-            string[] subStr = BulkHeaders.Split(";");
-
-            foreach (var s in subStr)
-            {
-                string[] keyVal = s.Split(":");
-                requestHeaders.Add(new RequestHeaderViewModel{ Key = keyVal[0], Value = keyVal[1]});
-            }
-
-            return requestHeaders;
+            string[] subStr = BulkHeaders?.Split(";");
+            return subStr?.Select(s => s.Split(":")).Select(keyVal => new RequestHeaderViewModel {Key = keyVal[0], Value = keyVal[1]}).ToList();
         }
     }
 }

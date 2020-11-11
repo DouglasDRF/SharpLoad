@@ -1,28 +1,33 @@
 ﻿@using SharpLoad.Dashboard.Client.ViewModels
+<tbody>
+    @foreach (var item in Requests)
+    {
+        <tr>
+            <td>
+                <input class="form-control" type="text" @bind="item.Path">
+            </td>
 
-<tr>
-    <td>
-        <input class="form-control" type="text" @bind="Path">
-    </td>
-    <td>
-        <select @bind="Method"></select>
-    </td>
-    <td>
-        <input class="form-control" type="text" @bind="Body">
-    </td>
-    <td>
-        <input class="form-control" type="text" @bind="BulkHeaders">
-    </td>
-</tr>
+            <td>
+                <input class="form-control" type="text" @bind="item.Body">
+            </td>
+            <td>
+                <InputSelect class="form-control" @bind-Value="item.Method">
+                    <option value="Get">Get</option>
+                    <option value="Post">Post</option>
+                    <option value="Put">Put</option>
+                    <option value="Patch">Patch</option>
+                    <option value="Delete">Delete</option>
+                </InputSelect>
+            </td>
+            <td>
+                <input class="form-control" type="text" @bind="item.BulkHeaders">
+            </td>
+        </tr>
+    }
+
+</tbody>
 
 @code {
-
-    [Parameter]
-    public string Path { get; set; }
-    [Parameter]
-    public ViewModels.Enums.HttpMethod Method { get; set; }
-    [Parameter]
-    public string Body { get; set; }
-    [Parameter]
-    public string BulkHeaders { get; set; }
+    [Parameter] 
+    public IReadOnlyList<RequestViewModel> Requests { get; set; }
 }
