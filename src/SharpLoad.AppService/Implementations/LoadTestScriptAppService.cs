@@ -1,9 +1,9 @@
-﻿using SharpLoad.AppService.Abstractions;
-using SharpLoad.AppService.Helpers;
-using SharpLoad.Core.Repositories;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using SharpLoad.AppService.Abstractions;
+using SharpLoad.AppService.Helpers;
 using SharpLoad.AppService.DTOs;
+using SharpLoad.Core.Repositories;
 
 namespace SharpLoad.AppService.Implementations
 {

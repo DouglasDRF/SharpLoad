@@ -1,16 +1,21 @@
 ﻿@page "/addloadtestscript"
 
 @using System.Text.Json
-@using System.Net.Http
 @using System.Text
 @using SharpLoad.Dashboard.Client.ViewModels
+
+@using System.Net.Http.Headers
+@using SharpLoad.Dashboard.Client.Pages.Components
 
 @inject HttpClient client
 
 <h3>Add a New Load Test Script</h3>
 
+
+
 <div class="d-flex flex-row bd-highlight">
-    <form>
+
+    <EditForm Model="@model">
         <div class="form-group">
             <label>Nome:</label>
             <input class="form-control" type="text" @bind="model.Name">
@@ -30,61 +35,60 @@
 
         <div class="form-group">
             <label>Requests:</label>
-            <br />
+            <br/>
             <table class="table">
                 <thead>
-                    <tr>
-                        <th>Endpoint Path</th>
-                        <th>Method</th>
-                        <th>Body Content</th>
-                        <th>Headers</th>
-                    </tr>
+                <tr>
+                    <th>Endpoint Path</th>
+                    <th>Method</th>
+                    <th>Body Content</th>
+                    <th>Headers</th>
+                </tr>
                 </thead>
                 <tbody>
-                    @foreach (var r in model.Requests)
-                    {
-                        <tr>
-                            <td>
-                                <input class="form-control" type="text" @bind="r.Path">
-                            </td>
-                            <td>
-                                <select @bind="r.Method"></select>
-                            </td>
-                            <td>
-                                <input class="form-control" type="text" @bind="r.Body">
-                            </td>
-                            <td>
-                                <input class="form-control" type="text" @bind="r.Headers">
-                            </td>
-                        </tr>
-                    }
+                    @RequestsFormRender
                 </tbody>
             </table>
             <div class="d-flex flex-column-reverse bd-highlight">
                 <button class="btn btn-success" @onclick="AddRequest">Add Request</button>
             </div>
         </div>
-    </form>
+    </EditForm>
 </div>
 
 <button type="button" class="btn btn-primary" @onclick="SaveNewTestPlanAsync">Save </button>
 
 @code{
-
+    
     private LoadTestScriptViewModel model = new LoadTestScriptViewModel();
-    private RequestViewModel requestModel = new RequestViewModel();
+    private RenderFragment RequestsFormRender { get; set; }
+
+    RenderFragment CreateRequest(IEnumerable<RequestViewModel> requests) => builder =>
+    {
+        foreach (var request in requests)
+        {
+            builder.OpenComponent(0, typeof(ChildRequestForm));
+            builder.AddAttribute(1, "Path", request.Path);
+            builder.AddAttribute(2, "Body", request.Body);
+            builder.AddAttribute(4, "BulkHeaders", request.BulkHeaders);
+            builder.AddAttribute(3, "Method", request.Method);
+            builder.CloseComponent();
+        }
+    };
 
     private void AddRequest()
     {
         if (model.Requests == null)
             model.Requests = new List<RequestViewModel>();
 
-        model.Requests.Add(requestModel);
-    }
+        model.Requests.Add(new RequestViewModel());
 
-    private void RefreshRequestList()
+        RenderComponent(model.Requests);
+    }
+    
+    private void RenderComponent(IEnumerable<RequestViewModel> requestList)
     {
-        
+        RequestsFormRender = CreateRequest(requestList);
     }
 
     private async void SaveNewTestPlanAsync()

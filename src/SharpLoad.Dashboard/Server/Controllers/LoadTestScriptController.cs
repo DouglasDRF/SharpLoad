@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SharpLoad.AppService.Abstractions;
 using SharpLoad.AppService.DTOs;
@@ -16,6 +17,7 @@ namespace SharpLoad.Dashboard.Server.Controllers
         }
 
         [HttpGet]
+        [Produces(typeof(IEnumerable<LoadTestScriptDto>))]
         public async Task<IActionResult> GetAllAsync()
         {
             return Ok(await _appService.GetAllAsync());

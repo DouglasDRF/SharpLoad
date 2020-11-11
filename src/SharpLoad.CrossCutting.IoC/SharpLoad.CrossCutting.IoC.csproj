@@ -4,6 +4,10 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\SharpLoad.AppService\SharpLoad.AppService.csproj" />
     <ProjectReference Include="..\SharpLoad.Infra.Data\SharpLoad.Infra.Data.csproj" />
