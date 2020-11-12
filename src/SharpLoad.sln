@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLoad.Core", "SharpLoad
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLoad.CrossCutting.IoC", "SharpLoad.CrossCutting.IoC\SharpLoad.CrossCutting.IoC.csproj", "{577D4E1E-7C88-41CA-AE22-2DEA8A2DA84A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLoad.AppService", "SharpLoad.AppService\SharpLoad.AppService.csproj", "{D23BF0E4-447C-4950-922E-4A9952E45218}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLoad.AppService", "SharpLoad.AppService\SharpLoad.AppService.csproj", "{D23BF0E4-447C-4950-922E-4A9952E45218}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

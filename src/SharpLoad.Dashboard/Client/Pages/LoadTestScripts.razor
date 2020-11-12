@@ -1,7 +1,9 @@
 ﻿@page "/loadtestscripts"
-@using SharpLoad.AppService.ViewModels
+@using SharpLoad.Dashboard.Client.ViewModels
+@using System.Text.Json
 @inject HttpClient Http
 @inject NavigationManager Navigator
+@inject IJSRuntime JS;
 
 <h1>Load Test Scripts</h1>
 
@@ -9,44 +11,46 @@
     <button class="p-1 btn btn-primary" @onclick="GoToInsertPage"> Add Test Script </button>
 </div>
 
-@if (scripts == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <br />
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Base Server Address</th>
-                <th>Interval BetweenRequests</th>
-                <th>Simultaneous Clients</th>
-                <th>Status/Action</th>
-            </tr>
-        </thead>
-        <tbody>
+<br />
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Base Server Address</th>
+            <th>Interval BetweenRequests</th>
+            <th>Simultaneous Clients</th>
+            <th>Spawn Rate</th>
+            <th>Status/Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (scripts != null)
+        {
             @foreach (var script in scripts)
             {
                 <tr>
                     <td>@script.Name</td>
                     <td>@script.BaseServerAddress</td>
-                    <td>@script.SpawnRate</td>
+                    <td>@script.IntervalBetweenRequests</td>
                     <td>@script.MaxSimultaneousClients</td>
-                    <td> <button>Run</button></td>
+                    <td>@script.SpawnRate</td>
+                    <td><button>Run</button></td>
                 </tr>
             }
-        </tbody>
-    </table>
-}
+        }
+    </tbody>
+</table>
 
 @code {
     private LoadTestScriptViewModel[] scripts;
 
     protected override async Task OnInitializedAsync()
     {
-        scripts = await Http.GetFromJsonAsync<LoadTestScriptViewModel[]>("api/loadtestscript");
+        var result = await Http.GetAsync("api/loadtestscript");
+        if (result.IsSuccessStatusCode)
+        {
+            scripts = JsonSerializer.Deserialize<LoadTestScriptViewModel[]>(await result.Content.ReadAsStringAsync());
+        }
     }
 
     private void GoToInsertPage()

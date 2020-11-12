@@ -1,4 +1,4 @@
-﻿namespace SharpLoad.Core.Enums
+﻿namespace SharpLoad.Dashboard.Client.ViewModels.Enums
 {
     public enum HttpMethods
     {

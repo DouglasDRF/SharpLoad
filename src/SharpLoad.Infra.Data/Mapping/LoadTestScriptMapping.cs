@@ -15,7 +15,7 @@ namespace SharpLoad.Infra.Data.Mapping
             builder.Property(x => x.Name).HasMaxLength(64).IsRequired();
             builder.Property(x => x.BaseServerAddress).IsRequired();
 
-            builder.HasMany(x => x.Requests).WithOne().OnDelete(DeleteBehavior.Cascade);
+            builder.HasMany(x => x.Requests).WithOne().IsRequired().OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

@@ -1,9 +1,9 @@
-﻿using SharpLoad.AppService.Abstractions;
-using SharpLoad.AppService.Helpers;
-using SharpLoad.AppService.ViewModels;
-using SharpLoad.Core.Repositories;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using SharpLoad.AppService.Abstractions;
+using SharpLoad.AppService.Helpers;
+using SharpLoad.AppService.DTOs;
+using SharpLoad.Core.Repositories;
 
 namespace SharpLoad.AppService.Implementations
 {
@@ -15,14 +15,14 @@ namespace SharpLoad.AppService.Implementations
             _repository = repository;
         }
 
-        public async Task<IEnumerable<LoadTestScriptViewModel>> GetAllAsync()
+        public async Task<IEnumerable<LoadTestScriptDto>> GetAllAsync()
         {
            return (await _repository.GetAllAsync()).ToViewModelList();
         }
 
-        public Task CreateAsync(LoadTestScriptViewModel viewModel)
+        public Task CreateAsync(LoadTestScriptDto dto)
         {
-            return _repository.CreateAsync(viewModel.ToModel());
+            return _repository.CreateAsync(dto.ToModel());
         }
     }
 }

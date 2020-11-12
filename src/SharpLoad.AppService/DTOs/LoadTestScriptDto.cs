@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace SharpLoad.AppService.ViewModels
+namespace SharpLoad.AppService.DTOs
 {
-    public class LoadTestScriptViewModel : BaseViewModel
+    public class LoadTestScriptDto : BaseDto
     {
-        public LoadTestScriptViewModel()
+        public LoadTestScriptDto()
         {
-            Requests = new List<RequestViewModel>();
+            Requests = new List<RequestDto>();
         }
         
         [Required]
@@ -18,8 +18,9 @@ namespace SharpLoad.AppService.ViewModels
         [Required]
         public string BaseServerAddress { get; set; }
         public int MaxSimultaneousClients { get; set; }
+        public int IntervalBetweenRequests { get; set; }
         public TestStatus Status { get; set; }
         [Required]
-        public ICollection<RequestViewModel> Requests { get; set; }
+        public ICollection<RequestDto> Requests { get; set; }
     }
 }

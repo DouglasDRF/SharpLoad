@@ -23,7 +23,6 @@ namespace SharpLoad.Dashboard.Server
 
             services.InitializeDependencyInjection(Configuration);
         }
-
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())

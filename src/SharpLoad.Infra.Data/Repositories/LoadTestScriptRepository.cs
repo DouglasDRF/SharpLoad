@@ -17,7 +17,7 @@ namespace SharpLoad.Infra.Data.Repositories
 
         public Task<IQueryable<LoadTestScript>> GetAllAsync()
         {
-            return Task.FromResult(_context.LoadTestScripts.AsNoTracking().AsQueryable());
+            return Task.FromResult(_context.LoadTestScripts.Include(x => x.Requests).ThenInclude(x => x.Headers).AsNoTracking().AsQueryable());
         }
 
         public async Task CreateAsync(LoadTestScript testScript)
