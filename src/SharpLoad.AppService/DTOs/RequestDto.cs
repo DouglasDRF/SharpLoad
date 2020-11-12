@@ -10,8 +10,10 @@ namespace SharpLoad.AppService.DTOs
         [Required]
         public Uri Path { get; set; }
         [Required]
-        public HttpMethods Method {get; set;}
-        public string Body { get; set; }
+        public HttpMethods Method { get; set; }
+
+        public string Body { get; set; } 
         public IEnumerable<RequestHeaderDto> Headers { get; set; }
+        public string ContentType { get; set; } = string.Empty;
     }
 }

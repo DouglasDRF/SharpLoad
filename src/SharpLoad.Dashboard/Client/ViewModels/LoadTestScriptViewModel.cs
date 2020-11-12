@@ -18,6 +18,7 @@ namespace SharpLoad.Dashboard.Client.ViewModels
         [Required]
         public string BaseServerAddress { get; set; }
         public int MaxSimultaneousClients { get; set; }
+        public int IntervalBetweenRequests { get; set; }
         public TestStatus Status { get; set; }
         [Required]
         public ICollection<RequestViewModel> Requests { get; set; }

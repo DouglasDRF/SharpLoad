@@ -14,7 +14,7 @@ namespace SharpLoad.Infra.Data.Mapping
             
             builder.HasKey(x => x.Id);
             
-            builder.Property(x => x.Body).IsRequired();
+            builder.Property(x => x.Body);
             builder.Property(x => x.Path).IsRequired();
             builder.Property(x => x.Method)
                 .HasConversion(x => x.ToString(), value => (HttpMethods)Enum.Parse(typeof(HttpMethods), value))

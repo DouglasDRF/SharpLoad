@@ -31,8 +31,10 @@ namespace SharpLoad.Infra.Data.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Path = table.Column<string>(type: "TEXT", nullable: false),
-                    Body = table.Column<byte[]>(type: "BLOB", nullable: false),
-                    LoadTestScriptId = table.Column<int>(type: "INTEGER", nullable: true)
+                    Method = table.Column<string>(type: "TEXT", nullable: false),
+                    Body = table.Column<byte[]>(type: "BLOB", nullable: true),
+                    ContentType = table.Column<string>(type: "TEXT", nullable: true),
+                    LoadTestScriptId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -50,8 +52,7 @@ namespace SharpLoad.Infra.Data.Migrations
                 columns: table => new
                 {
                     RequestId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    Id = table.Column<int>(type: "INTEGER", nullable: false),
                     Key = table.Column<string>(type: "TEXT", nullable: false),
                     Value = table.Column<string>(type: "TEXT", nullable: false)
                 },

@@ -3,15 +3,11 @@
 @using System.Text.Json
 @using System.Text
 @using SharpLoad.Dashboard.Client.ViewModels
-
-@using System.Net.Http.Headers
 @using SharpLoad.Dashboard.Client.Pages.Components
 
 @inject HttpClient client
 
 <h3>Add a New Load Test Script</h3>
-
-
 
 <div class="d-flex flex-row bd-highlight">
 
@@ -45,6 +41,7 @@
                         <th>Body Content</th>
                         <th>Methods</th>
                         <th>Headers</th>
+                        <th>Content Type</th>
                     </tr>
                 </thead>
                 @TableRows
@@ -63,11 +60,9 @@
 
     RenderFragment CreateRequest(IEnumerable<RequestViewModel> requests) => builder =>
     {
-
         builder.OpenComponent(0, typeof(ChildRequestForm));
         builder.AddAttribute(1, "Requests", requests);
         builder.CloseComponent();
-
     };
 
     private void AddRequest()

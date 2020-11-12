@@ -9,14 +9,14 @@ using SharpLoad.Infra.Data.Contexts;
 namespace SharpLoad.Infra.Data.Migrations
 {
     [DbContext(typeof(MainContext))]
-    [Migration("20200822143558_AddingHttpMethod")]
-    partial class AddingHttpMethod
+    [Migration("20201112005144_Bootstrap")]
+    partial class Bootstrap
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "5.0.0-preview.7.20365.15");
+                .HasAnnotation("ProductVersion", "5.0.0");
 
             modelBuilder.Entity("SharpLoad.Core.Models.LoadTestScript", b =>
                 {
@@ -54,10 +54,12 @@ namespace SharpLoad.Infra.Data.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<byte[]>("Body")
-                        .IsRequired()
                         .HasColumnType("BLOB");
 
-                    b.Property<int?>("LoadTestScriptId")
+                    b.Property<string>("ContentType")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("LoadTestScriptId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Method")
@@ -80,7 +82,8 @@ namespace SharpLoad.Infra.Data.Migrations
                     b.HasOne("SharpLoad.Core.Models.LoadTestScript", null)
                         .WithMany("Requests")
                         .HasForeignKey("LoadTestScriptId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.OwnsMany("SharpLoad.Core.Models.RequestHeader", "Headers", b1 =>
                         {
@@ -106,6 +109,13 @@ namespace SharpLoad.Infra.Data.Migrations
                             b1.WithOwner()
                                 .HasForeignKey("RequestId");
                         });
+
+                    b.Navigation("Headers");
+                });
+
+            modelBuilder.Entity("SharpLoad.Core.Models.LoadTestScript", b =>
+                {
+                    b.Navigation("Requests");
                 });
 #pragma warning restore 612, 618
         }

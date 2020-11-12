@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text.Json.Serialization;
@@ -15,7 +14,7 @@ namespace SharpLoad.Dashboard.Client.ViewModels
         [Required]
         public HttpMethods Method { get; set; }
         public string Body { get; set; }
-
+        public string ContentType { get; set; }
         public IEnumerable<RequestHeaderViewModel> RequestHeaders => ParseBulkHeadersToHeadersObject();
 
         [JsonIgnore]
