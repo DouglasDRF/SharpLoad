@@ -13,3 +13,4 @@ src/**/obj
 /Release/osx-x64-nodependencies.7z
 /Release/linux-x64-nodependencies.7z
 /Release/linux-arm-nodependencies.7z
+/.vs
