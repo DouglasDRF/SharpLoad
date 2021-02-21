@@ -5,7 +5,8 @@
 @using SharpLoad.Dashboard.Client.ViewModels
 @using SharpLoad.Dashboard.Client.Pages.Components
 
-@inject HttpClient client
+@inject HttpClient Client
+@inject NavigationManager Navigator
 
 <h3>Add a New Load Test Script</h3>
 
@@ -81,6 +82,10 @@
     private async void SaveNewTestPlanAsync()
     {
         HttpContent content = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
-        await client.PostAsync("http://localhost:5000/api/loadtestscript", content);
+        var result = await Client.PostAsync("http://localhost:5000/api/loadtestscript", content);
+
+        if (result.IsSuccessStatusCode)
+            Navigator.NavigateTo("/loadtestscripts");
     }
 }
+

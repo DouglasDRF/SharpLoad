@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using SharpLoad.Dashboard.Client.ViewModels.Abstractions;
 using SharpLoad.Dashboard.Client.ViewModels.Enums;
 
 namespace SharpLoad.Dashboard.Client.ViewModels
 {
-    public class LoadTestScriptViewModel
+    public class LoadTestScriptViewModel : BaseViewModel
     {
         public LoadTestScriptViewModel()
         {

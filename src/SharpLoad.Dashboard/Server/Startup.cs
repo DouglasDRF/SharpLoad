@@ -18,6 +18,7 @@ namespace SharpLoad.Dashboard.Server
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddControllers();
             services.AddControllersWithViews();
             services.AddRazorPages();
 

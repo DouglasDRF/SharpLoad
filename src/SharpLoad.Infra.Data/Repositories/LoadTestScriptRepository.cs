@@ -20,20 +20,27 @@ namespace SharpLoad.Infra.Data.Repositories
             return Task.FromResult(_context.LoadTestScripts.Include(x => x.Requests).ThenInclude(x => x.Headers).AsNoTracking().AsQueryable());
         }
 
-        public async Task CreateAsync(LoadTestScript testScript)
+        public async Task<LoadTestScript> GetByIdAsync(int id)
         {
-            _ = await _context.AddAsync(testScript);
-            _ = await _context.SaveChangesAsync();
-         }
-
-        public Task EditAsync(LoadTestScript testScript)
-        {
-            throw new System.NotImplementedException();
+            return await _context.LoadTestScripts.FindAsync(id);
         }
 
-        public Task DeleteAsync(LoadTestScript testScript)
+        public async Task<int> CreateAsync(LoadTestScript testScript)
         {
-            throw new System.NotImplementedException();
+            _ = await _context.AddAsync(testScript);
+            return await _context.SaveChangesAsync();
+         }
+
+        public Task<int> EditAsync(LoadTestScript testScript)
+        {
+            _ = _context.Update(testScript);
+            return _context.SaveChangesAsync();
+        }
+
+        public Task<int> DeleteAsync(LoadTestScript testScript)
+        {
+            _ = _context.Remove(testScript);
+            return _context.SaveChangesAsync();
         }
     }
 }

@@ -17,12 +17,22 @@ namespace SharpLoad.AppService.Implementations
 
         public async Task<IEnumerable<LoadTestScriptDto>> GetAllAsync()
         {
-           return (await _repository.GetAllAsync()).ToViewModelList();
+            return (await _repository.GetAllAsync()).ToViewModelList();
         }
 
-        public Task CreateAsync(LoadTestScriptDto dto)
+        public Task<int> CreateAsync(LoadTestScriptDto dto)
         {
             return _repository.CreateAsync(dto.ToModel());
+        }
+
+        public async Task<int> DeleteAsync(int id)
+        {
+            var entry = await _repository.GetByIdAsync(id);
+            
+            if (entry != null)
+                return await _repository.DeleteAsync(entry);
+
+            return 0;
         }
     }
 }

@@ -1,18 +1,13 @@
-﻿using System;
-
-namespace SharpLoad.Core.Models
+﻿namespace SharpLoad.Core.Models
 {
     public abstract class BaseModel
     { 
-        public int Id { get; private set; }
+        public int Id { get; }
        
         protected BaseModel(int id)
         {
             Id = id;
         }
-        protected BaseModel()
-        {
-
-        }
+        protected BaseModel() { }
     }
 }

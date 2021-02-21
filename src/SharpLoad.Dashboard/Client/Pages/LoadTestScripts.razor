@@ -1,6 +1,7 @@
 ﻿@page "/loadtestscripts"
 @using SharpLoad.Dashboard.Client.ViewModels
 @using System.Text.Json
+@using System.Text
 @inject HttpClient Http
 @inject NavigationManager Navigator
 @inject IJSRuntime JS;
@@ -34,7 +35,13 @@
                     <td>@script.IntervalBetweenRequests</td>
                     <td>@script.MaxSimultaneousClients</td>
                     <td>@script.SpawnRate</td>
-                    <td><button>Run</button></td>
+                    <td>
+                        <ul>
+                            <li><button>Run</button></li>
+                            <li><button>Edit</button></li>
+                            <li><button @onclick="() => DeleteSTestScript(script)">Remove</button></li>
+                        </ul>
+                    </td>
                 </tr>
             }
         }
@@ -49,13 +56,19 @@
         var result = await Http.GetAsync("api/loadtestscript");
         if (result.IsSuccessStatusCode)
         {
-        scripts = JsonSerializer.Deserialize<LoadTestScriptViewModel[]>(await result.Content.ReadAsStringAsync(),
-            new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+            scripts = JsonSerializer.Deserialize<LoadTestScriptViewModel[]>(await result.Content.ReadAsStringAsync(),
+                new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
         }
     }
 
     private void GoToInsertPage()
     {
         Navigator.NavigateTo("addloadtestscript");
+    }
+    private async void DeleteSTestScript(LoadTestScriptViewModel testScript)
+    {
+        var result = await Http.DeleteAsync($"api/loadtestscript?id={testScript.Id}");
+        if (result.IsSuccessStatusCode)
+            StateHasChanged();
     }
 }

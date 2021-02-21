@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SharpLoad.AppService.Abstractions;
@@ -20,14 +21,25 @@ namespace SharpLoad.Dashboard.Server.Controllers
         [Produces(typeof(IEnumerable<LoadTestScriptDto>))]
         public async Task<IActionResult> GetAllAsync()
         {
-            return Ok(await _appService.GetAllAsync());
+            var response = (await _appService.GetAllAsync()).ToList();
+            return Ok(response);
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateAsync(LoadTestScriptDto testScript)
         {
-            await _appService.CreateAsync(testScript);
-            return Created(HttpContext.Request.Path, testScript);
+            var rowsChanged = await _appService.CreateAsync(testScript);
+            if (rowsChanged > 0)
+                return Created(HttpContext.Request.Path, testScript);
+            else
+                return UnprocessableEntity(testScript);
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteAsync([FromQuery] int id)
+        {
+            var rowsChanged = await _appService.DeleteAsync(id);
+            return Ok(new { rowsChanged });
         }
     }
 }

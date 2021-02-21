@@ -7,8 +7,9 @@ namespace SharpLoad.Core.Repositories
     public interface ILoadTestScriptRepository
     {
         Task<IQueryable<LoadTestScript>> GetAllAsync();
-        Task CreateAsync(LoadTestScript testScript);
-        Task EditAsync(LoadTestScript testScript);
-        Task DeleteAsync(LoadTestScript testScript);
+        Task<LoadTestScript> GetByIdAsync(int id);
+        Task<int> CreateAsync(LoadTestScript testScript);
+        Task<int> EditAsync(LoadTestScript testScript);
+        Task<int> DeleteAsync(LoadTestScript testScript);
     }
 }

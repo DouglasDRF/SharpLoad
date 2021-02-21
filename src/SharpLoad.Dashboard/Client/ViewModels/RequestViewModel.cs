@@ -2,12 +2,13 @@
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text.Json.Serialization;
+using SharpLoad.Dashboard.Client.ViewModels.Abstractions;
 using SharpLoad.Dashboard.Client.ViewModels.Enums;
 
 
 namespace SharpLoad.Dashboard.Client.ViewModels
 {
-    public class RequestViewModel
+    public class RequestViewModel : BaseViewModel
     {
         [Required]
         public string Path { get; set; }

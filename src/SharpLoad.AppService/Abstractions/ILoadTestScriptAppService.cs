@@ -7,6 +7,7 @@ namespace SharpLoad.AppService.Abstractions
     public interface ILoadTestScriptAppService
     {
         Task<IEnumerable<LoadTestScriptDto>> GetAllAsync();
-        Task CreateAsync(LoadTestScriptDto dto);
+        Task<int> CreateAsync(LoadTestScriptDto dto);
+        Task<int> DeleteAsync(int id);
     }
 }
