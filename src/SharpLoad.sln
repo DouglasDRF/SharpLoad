@@ -17,6 +17,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLoad.CrossCutting.IoC"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLoad.AppService", "SharpLoad.AppService\SharpLoad.AppService.csproj", "{D23BF0E4-447C-4950-922E-4A9952E45218}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLoad.UnitTests", "SharpLoad.UnitTests\SharpLoad.UnitTests.csproj", "{8078ED35-68F8-4432-BD0A-8F08B5603643}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "etc", "etc", "{2E363299-2A8D-4426-B773-695FEFEA0C57}"
+	ProjectSection(SolutionItems) = preProject
+		..\.travis.yml = ..\.travis.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +54,10 @@ Global
 		{D23BF0E4-447C-4950-922E-4A9952E45218}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D23BF0E4-447C-4950-922E-4A9952E45218}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D23BF0E4-447C-4950-922E-4A9952E45218}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8078ED35-68F8-4432-BD0A-8F08B5603643}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8078ED35-68F8-4432-BD0A-8F08B5603643}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8078ED35-68F8-4432-BD0A-8F08B5603643}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8078ED35-68F8-4432-BD0A-8F08B5603643}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

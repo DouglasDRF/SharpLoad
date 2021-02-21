@@ -25,6 +25,11 @@ namespace SharpLoad.AppService.Implementations
             return _repository.CreateAsync(dto.ToModel());
         }
 
+        public Task<int> UpdateAsync(LoadTestScriptDto dto)
+        {
+             return _repository.EditAsync(dto.ToModel());
+        }
+
         public async Task<int> DeleteAsync(int id)
         {
             var entry = await _repository.GetByIdAsync(id);
