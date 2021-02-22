@@ -1,3 +1,4 @@
+[![License](https://img.shields.io/github/license/douglasdrf/sharpload?style=plastic)](https://github.com/DouglasDRF/SharpLoad/blob/master/LICENSE)
 [![Build Status](https://travis-ci.org/DouglasDRF/SharpLoad.svg?branch=master)](https://travis-ci.org/DouglasDRF/SharpLoad)
 
 # SharpLoad
